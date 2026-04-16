@@ -11,8 +11,18 @@ config_version=5
 [application]
 
 config/name="QuantumGomoku"
+run/main_scene="uid://bbw5gi8e2oels"
 config/features=PackedStringArray("4.6", "Forward Plus")
 config/icon="res://icon.svg"
+
+[autoload]
+
+Global="*uid://cq4qgfn2sm3lp"
+
+[display]
+
+window/size/viewport_height=660
+window/stretch/mode="canvas_items"
 
 [physics]
 

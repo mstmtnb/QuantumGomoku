@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://bbw5gi8e2oels"]
+
+[ext_resource type="PackedScene" uid="uid://drwjtrq1fss3g" path="res://board.tscn" id="1_0xm2m"]
+[ext_resource type="PackedScene" uid="uid://b6rv4d6ja368o" path="res://hud.tscn" id="2_h2yge"]
+
+[node name="Main" type="Node" unique_id=1781520436]
+
+[node name="Board" parent="." unique_id=1335851974 instance=ExtResource("1_0xm2m")]
+
+[node name="Hud" parent="." unique_id=102944952 instance=ExtResource("2_h2yge")]
+metadata/_edit_group_ = true
