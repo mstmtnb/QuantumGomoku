@@ -6,7 +6,6 @@ const LINE_INTERVAL = 30
 const BOARD_RECT = Rect2(30,30,600,600)
 const BOARD_COLOR = Color8(222,160,71)
 
-
 #黒=0、白=100で石を表す。空白は-1
 var grid: Array = []
 var selectedGrid = Vector2(-1,-1)

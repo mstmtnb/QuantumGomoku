@@ -1,22 +1,17 @@
-extends Control
+extends Node
 
-signal test
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	startGame()
 	pass # Replace with function body.
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	pass
-
-
-func _on_test_pressed() -> void:
+	
+func startGame():
 	print("test")
-	pass # Replace with function body.
-
-
-func _on_button_new_game_button_down() -> void:
-	test.emit()	
-	pass # Replace with function body.
+	Global.turn = 0
+	pass
