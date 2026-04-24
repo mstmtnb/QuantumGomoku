@@ -6,9 +6,7 @@ const LINE_INTERVAL = 30
 const BOARD_RECT = Rect2(30,30,600,600)
 const BOARD_COLOR = Color8(222,160,71)
 
-#黒=0、白=100で石を表す。空白は-1
-var grid: Array = []
-var selectedGrid = Vector2(-1,-1)
+var font
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -16,23 +14,41 @@ func _ready() -> void:
 		var row = []
 		for y in range(19):
 			row.append(-1)
-		grid.append(row)
-	grid[4][4] = 100
-	grid[4][5] = 0
-	grid[4][6] = 100
+		Global.grid.append(row)
+	Global.grid[5][5] == 100
+	font = load("res://NotoSansJP-Bold.ttf")
+	print($"../ConfirmationDialog")
+	print($Main/Board)
+
+func _input(event):
+	if (event is InputEventMouseButton):
+		if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
+			if(Global.selectedGrid.x >= 0 && Global.selectedGrid.y >= 0):
+				match Global.turn:
+					Global.turn_enum.None:
+						pass
+					Global.turn_enum.Black:
+						Global.grid[Global.selectedGrid.x][Global.selectedGrid.y] = 0
+						Global.turn = Global.turn_enum.White
+						$"../ConfirmationDialog".popup_centered()
+					Global.turn_enum.White:
+						Global.grid[Global.selectedGrid.x][Global.selectedGrid.y] = 100
+						Global.turn = Global.turn_enum.Black
+						$"../ConfirmationDialog".popup_centered()
+				pass
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	var mousePos = get_viewport().get_mouse_position()
-	selectedGrid = Vector2(-1,-1)
+	Global.selectedGrid = Vector2(-1,-1)
 	for x in range(19):
 		for y in range(19):
 			if (BOARD_RECT.position.x + 30 + x * 30 - 15 <= mousePos.x and 
 				mousePos.x <= BOARD_RECT.position.x + 30 + x * 30 + 15 and 
 				BOARD_RECT.position.y + 30 + y * 30 - 15 <= mousePos.y and 
 				mousePos.y <= BOARD_RECT.position.y + 30 + y * 30 + 15 and 
-				grid[x][y] == -1):
-				selectedGrid = Vector2(x,y)
+				Global.grid[x][y] == -1):
+				Global.selectedGrid = Vector2(x,y)
 				#print("%d:%d %d" % [x,y,grid[x][y]])
 	queue_redraw()
 
@@ -57,7 +73,7 @@ func _draw() -> void:
 	for x in range(19):
 		for y in range(19):
 			#print("%d:%d %d" % [x,y,grid[x][y]])
-			match  grid[x][y]:
+			match  Global.grid[x][y]:
 				-1:
 					pass
 				0:
@@ -72,8 +88,12 @@ func _draw() -> void:
 					pass
 	
 	#マウス座標の石を描画
-	if(selectedGrid.x >= 0 and selectedGrid.y >= 0):
-		draw_circle(Vector2(BOARD_RECT.position.x + 30 + selectedGrid.x * 30,BOARD_RECT.position.y + 30 + selectedGrid.y * 30),
-								STONE_RADIUS,Color.BLACK)
-		pass
+	if(Global.selectedGrid.x >= 0 and Global.selectedGrid.y >= 0):
+		if(Global.turn == Global.turn_enum.Black):
+			draw_circle(Vector2(BOARD_RECT.position.x + 30 + Global.selectedGrid.x * 30,BOARD_RECT.position.y + 30 + Global.selectedGrid.y * 30),
+								STONE_RADIUS,Color(0,0,0,0.5))
+		elif (Global.turn == Global.turn_enum.White):
+			draw_circle(Vector2(BOARD_RECT.position.x + 30 + Global.selectedGrid.x * 30,BOARD_RECT.position.y + 30 + Global.selectedGrid.y * 30),
+								STONE_RADIUS,Color(1,1,1,0.5))
 	
+	draw_string(font, Vector2(100, 110), "68",HORIZONTAL_ALIGNMENT_LEFT, -1, 14,Color.BLUE)

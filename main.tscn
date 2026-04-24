@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://dhrxuywudp7aa" path="res://main.gd" id="1_h2yge"]
 [ext_resource type="Script" uid="uid://bg1njhf10q1hj" path="res://board.gd" id="2_0xm2m"]
+[ext_resource type="Script" uid="uid://dsqu4dd02t342" path="res://button.gd" id="2_h2yge"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lquwl"]
 
@@ -47,6 +48,21 @@ grow_vertical = 2
 metadata/_edit_group_ = true
 
 [node name="Button_NewGame" type="Button" parent="Panel" unique_id=1158774434]
+layout_mode = 0
+offset_left = 40.0
+offset_top = 563.0
+offset_right = 381.0
+offset_bottom = 608.0
+theme_override_font_sizes/font_size = 32
+theme_override_styles/normal = SubResource("StyleBoxFlat_lquwl")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_7mycd")
+theme_override_styles/hover = SubResource("StyleBoxFlat_272bh")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_5vw27")
+theme_override_styles/focus = SubResource("StyleBoxFlat_kek77")
+text = "新規対局"
+script = SubResource("GDScript_ig7tw")
+
+[node name="Button_NewGame" type="Button" parent="Panel/Button_NewGame" unique_id=1450698251]
 layout_mode = 0
 offset_left = 40.0
 offset_top = 563.0
@@ -122,6 +138,7 @@ offset_right = 83.0
 offset_bottom = 163.0
 theme_override_font_sizes/font_size = 32
 text = "+10"
+script = ExtResource("2_h2yge")
 
 [node name="Button2" type="Button" parent="Panel/Panel" unique_id=1288027195]
 layout_mode = 0
@@ -232,3 +249,12 @@ text = "-10"
 
 [node name="Board" type="Node2D" parent="." unique_id=1261227371]
 script = ExtResource("2_0xm2m")
+
+[node name="ConfirmationDialog" type="ConfirmationDialog" parent="." unique_id=1970927842]
+title = "確認"
+ok_button_text = "はい"
+dialog_text = "観測して石を確定させますか？"
+cancel_button_text = "いいえ"
+
+[connection signal="button_down" from="Panel/Button_NewGame" to="." method="startGame"]
+[connection signal="button_down" from="Panel/Panel/Button" to="Panel/Panel/Button" method="_on_button_down"]
