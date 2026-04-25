@@ -17,8 +17,8 @@ func _ready() -> void:
 		Global.grid.append(row)
 	Global.grid[5][5] == 100
 	font = load("res://NotoSansJP-Bold.ttf")
-	print($"../ConfirmationDialog")
-	print($Main/Board)
+	#print($"../ConfirmationDialog")
+	#print($Main/Board)
 
 func _input(event):
 	if (event is InputEventMouseButton):
@@ -28,14 +28,37 @@ func _input(event):
 					Global.turn_enum.None:
 						pass
 					Global.turn_enum.Black:
-						Global.grid[Global.selectedGrid.x][Global.selectedGrid.y] = 0
-						Global.turn = Global.turn_enum.White
+						Global.grid[Global.selectedGrid.x][Global.selectedGrid.y] = Global.blackUsePoint
+						Global.blackPoint -= Global.blackUsePoint
+						Global.blackPoint += 70
+						Global.blackUsePoint = 70
 						$"../ConfirmationDialog".popup_centered()
+						
 					Global.turn_enum.White:
-						Global.grid[Global.selectedGrid.x][Global.selectedGrid.y] = 100
-						Global.turn = Global.turn_enum.Black
+						Global.grid[Global.selectedGrid.x][Global.selectedGrid.y] = 100 - Global.whiteUsePoint
+						Global.whitePoint -= Global.whiteUsePoint
+						Global.whitePoint += 70
+						Global.whiteUsePoint = 70
 						$"../ConfirmationDialog".popup_centered()
-				pass
+	queue_redraw()
+	
+func confilm():
+	for x in range(19):
+		for y in range(19):
+			if(1 <= Global.grid[x][y] && Global.grid[x][y] <= 99):
+				var r = randi_range(1,100)
+				if(Global.grid[x][y] < r):
+					Global.grid[x][y] = 0
+				else :
+					Global.grid[x][y] = 100
+	if(Global.turn == Global.turn_enum.Black):Global.turn = Global.turn_enum.White
+	elif (Global.turn == Global.turn_enum.White):Global.turn = Global.turn_enum.Black
+	queue_redraw()
+
+func cancel():
+	if(Global.turn == Global.turn_enum.Black):Global.turn = Global.turn_enum.White
+	elif (Global.turn == Global.turn_enum.White):Global.turn = Global.turn_enum.Black
+	queue_redraw()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
@@ -51,6 +74,7 @@ func _process(delta: float) -> void:
 				Global.selectedGrid = Vector2(x,y)
 				#print("%d:%d %d" % [x,y,grid[x][y]])
 	queue_redraw()
+	
 
 
 func _draw() -> void:
@@ -76,15 +100,19 @@ func _draw() -> void:
 			match  Global.grid[x][y]:
 				-1:
 					pass
-				0:
+				100:
 					draw_circle(Vector2(BOARD_RECT.position.x + 30 +x * 30,BOARD_RECT.position.y + 30 + y * 30),
 								STONE_RADIUS,Color.BLACK)
 					pass
-				100:
+				0:
 					draw_circle(Vector2(BOARD_RECT.position.x + 30 +x * 30,BOARD_RECT.position.y + 30 + y * 30),
 								STONE_RADIUS,Color.WHITE)
 					pass
 				_:
+					draw_circle(Vector2(BOARD_RECT.position.x + 30 +x * 30,BOARD_RECT.position.y + 30 + y * 30),
+								STONE_RADIUS,Color.GRAY)
+					draw_string(font, Vector2(BOARD_RECT.position.x + 22 +x * 30,BOARD_RECT.position.y + 36 + y * 30),
+								 str(Global.grid[x][y]),HORIZONTAL_ALIGNMENT_LEFT, -1, 14,Color.BLUE)
 					pass
 	
 	#マウス座標の石を描画
@@ -96,4 +124,14 @@ func _draw() -> void:
 			draw_circle(Vector2(BOARD_RECT.position.x + 30 + Global.selectedGrid.x * 30,BOARD_RECT.position.y + 30 + Global.selectedGrid.y * 30),
 								STONE_RADIUS,Color(1,1,1,0.5))
 	
-	draw_string(font, Vector2(100, 110), "68",HORIZONTAL_ALIGNMENT_LEFT, -1, 14,Color.BLUE)
+	#ポイント描画を更新
+	$"../Panel/PanelBlack/LabelPoint".text = str(Global.blackPoint)
+	$"../Panel/PanelBlack/LabelUsePoint".text = str(Global.blackUsePoint)
+	$"../Panel/PanelWhite/LabelPoint".text = str(Global.whitePoint)
+	$"../Panel/PanelWhite/LabelUsePoint".text = str(Global.whiteUsePoint)
+	
+	#ターン表示
+	if(Global.turn == Global.turn_enum.Black):
+		$"../Panel/LabelTurn".text = "黒の手番です"
+	if(Global.turn == Global.turn_enum.White):
+		$"../Panel/LabelTurn".text = "白の手番です"

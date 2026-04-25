@@ -22,6 +22,7 @@ Global="*uid://cq4qgfn2sm3lp"
 [display]
 
 window/size/viewport_height=660
+window/size/mode=2
 window/stretch/mode="canvas_items"
 
 [physics]
